@@ -33,7 +33,7 @@ public class EmployeeControllerWeb {
         return rSocketRequester.route("create-employee")
                 .data(employee)
                 .retrieveMono(Employee.class)
-                .doOnNext(employee1 -> logger.info("Creating new employee: {}", employee1));
+                .doOnNext(entity -> logger.info("Creating new employee: {}", entity));
 
     }
 
@@ -41,7 +41,15 @@ public class EmployeeControllerWeb {
     public Mono<Employee> findById(@PathVariable("id") Long id) {
         return rSocketRequester.route("find-by-id/{id}", id)
                 .retrieveMono(Employee.class)
-                .doOnNext(employee1 -> logger.info("find employee: {}", employee1));
+                .doOnNext(employee -> logger.info("find employee: {}", employee));
+
+    }
+
+    @GetMapping("/find-by-last-name/{last-name}")
+    public Flux<Employee> findById(@PathVariable("last-name") String lastName) {
+        return rSocketRequester.route("find-by-last-name/{last-name}", lastName)
+                .retrieveFlux(Employee.class)
+                .doOnNext(employee -> logger.info("find employees: {}", employee));
 
     }
 
@@ -49,7 +57,7 @@ public class EmployeeControllerWeb {
     public Flux<Employee> findAll() {
         return rSocketRequester.route("find-all")
                 .retrieveFlux(Employee.class)
-                .doOnNext(employee1 -> logger.info("find employee: {}", employee1));
+                .doOnNext(employee -> logger.info("find employee: {}", employee));
 
     }
 }

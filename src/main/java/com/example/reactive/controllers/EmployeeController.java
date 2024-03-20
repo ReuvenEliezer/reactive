@@ -30,10 +30,14 @@ public class EmployeeController {
     public Mono<Employee> createEmployee(@Payload Employee employee) {
         return employeeService.createEmployee(employee);
     }
-
     @MessageMapping("find-by-id/{id}")
-    public Mono<Employee> createEmployee(@DestinationVariable("id") Long id) {
+    public Mono<Employee> findById(@DestinationVariable("id") Long id) {
         return employeeRepository.findById(id);
+    }
+
+    @MessageMapping("find-by-last-name/{last-name}")
+    public Flux<Employee> findByLastName(@DestinationVariable("last-name") String lastName) {
+        return employeeRepository.findByLastName(lastName);
     }
 
     @MessageMapping("find-all")
