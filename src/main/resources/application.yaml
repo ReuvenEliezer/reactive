@@ -9,12 +9,12 @@ spring:
   rsocket:
     server:
       port: 8081
-  shell:
-    help:
-      enabled: true
-      long-names: help
-      short-names: h
-      command: help
+#  shell:
+#    help:
+#      enabled: true
+#      long-names: help
+#      short-names: h
+#      command: help
   flyway:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS testdb
     default-schema: testdb
@@ -41,4 +41,3 @@ spring:
 logging:
   level:
     org.springframework.data.r2dbc: TRACE
-    liquibase: TRACE

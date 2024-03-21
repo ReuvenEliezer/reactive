@@ -1,6 +1,7 @@
 package com.example.reactive.repositories;
 
 import com.example.reactive.dto.Employee;
+import org.springdoc.core.converters.models.Pageable;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 
@@ -12,4 +13,7 @@ public interface EmployeeRepository extends R2dbcRepository<Employee, Long> {
      * @return
      */
     Flux<Employee> findByLastName(String lastName);
+
+    Flux<Employee> findByLastName(Long entityId, Pageable page);
+
 }

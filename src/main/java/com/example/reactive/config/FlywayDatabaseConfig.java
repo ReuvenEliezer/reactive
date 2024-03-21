@@ -8,15 +8,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties({R2dbcProperties.class, FlywayProperties.class})
+@EnableConfigurationProperties(FlywayProperties.class)
 public class FlywayDatabaseConfig {
     @Bean(initMethod = "migrate")
-    public Flyway flyway(R2dbcProperties r2dbcProperties, FlywayProperties flywayProperties) {
+    public Flyway flyway(FlywayProperties flywayProperties) {
         return Flyway.configure()
                 .dataSource(
                         flywayProperties.getUrl(),
-                        r2dbcProperties.getUsername(),
-                        r2dbcProperties.getPassword()
+                        flywayProperties.getUser(),
+                        flywayProperties.getPassword()
                 )
                 .locations(flywayProperties.getLocations().toArray(String[]::new))
                 .baselineOnMigrate(true)
