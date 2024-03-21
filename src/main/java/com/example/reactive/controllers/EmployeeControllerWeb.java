@@ -2,7 +2,6 @@ package com.example.reactive.controllers;
 
 import com.example.reactive.dto.Employee;
 import com.example.reactive.services.EmployeeService;
-import com.example.reactive.services.cli.ReactiveCommand;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/employee")
 public class EmployeeControllerWeb {
-    private static final Logger logger = LoggerFactory.getLogger(ReactiveCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeControllerWeb.class);
     private final EmployeeService employeeService;
     private final RSocketRequester rSocketRequester;
 

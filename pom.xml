@@ -20,7 +20,9 @@
         <swagger.version>2.4.0</swagger.version>
     </properties>
 
+
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-r2dbc</artifactId>
@@ -32,11 +34,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.shell</groupId>
-            <artifactId>spring-shell-starter</artifactId>
-<!--            <scope>test</scope>-->
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.liquibase</groupId>-->
@@ -81,7 +78,14 @@
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.shell</groupId>-->
+<!--            <artifactId>spring-shell-starter</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
