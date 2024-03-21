@@ -31,23 +31,24 @@ class IntegrationTest {
 
     @Value("${server.port}")
     private int appPort;
+
     @Autowired
     private EmployeeRepository employeeRepository;
+
     @Autowired
     private WebClient webClient;
+
     @Autowired
     private RSocketRequester rSocketRequester;
 
 
     @BeforeEach
     void setUp() {
-        logger.info("setUp");
         employeeRepository.deleteAll().block();
     }
 
     @Test
     void bufferQueryTest() {
-        logger.info("start test");
         int employeeCount = 5;
         List<Employee> employees = Flux.range(0, employeeCount)
                 .index()
@@ -59,7 +60,6 @@ class IntegrationTest {
                 .block();
         assertThat(employees).hasSize(employeeCount);
         Long totalSaved = employeeRepository.findAll().count().block();
-        logger.info("end test");
         assertThat(totalSaved).isEqualTo(employeeCount);
     }
 
