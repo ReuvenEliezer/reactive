@@ -15,26 +15,27 @@ spring:
 #      long-names: help
 #      short-names: h
 #      command: help
-  flyway:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS testdb
-    default-schema: testdb
-    user: mysql
-    password: mysql
-    locations: classpath:db/changelog/flyway
-    enabled: true
-#  liquibase:
-#    default-schema: testdb
-#    enabled: true
-#    password: mysql
-#    user: mysql
-#    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS testdb
-#    change-log: db/changelog/db.changelog-master.yaml
-##    change-log: db/changelog/changelog-master.xml
   r2dbc:
-    url: r2dbc:h2:mem:///testdb?options=DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    url: r2dbc:h2:mem:///${spring.r2dbc.name}?options=DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
     username: mysql
     password: mysql
     name: testdb
+  flyway:
+    url: jdbc:h2:mem:${spring.r2dbc.name};DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS ${spring.r2dbc.name}
+    user: ${spring.r2dbc.username}
+    password: ${spring.r2dbc.password}
+    default-schema: ${spring.r2dbc.name}
+    locations: classpath:db/changelog/flyway
+    enabled: true
+  liquibase:
+    url: jdbc:h2:mem:${spring.r2dbc.name};DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS ${spring.r2dbc.name}
+    user: ${spring.r2dbc.password}
+    password: ${spring.r2dbc.username}
+    default-schema: ${spring.r2dbc.name}
+    change-log: db/changelog/db.changelog-master.yaml
+    enabled: true
+#    change-log: db/changelog/changelog-master.xml
+
   output:
     ansi:
       enabled: always
