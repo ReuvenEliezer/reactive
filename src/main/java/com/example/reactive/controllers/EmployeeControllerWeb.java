@@ -3,6 +3,7 @@ package com.example.reactive.controllers;
 import com.example.reactive.dto.Employee;
 import com.example.reactive.services.EmployeeService;
 import com.example.reactive.services.cli.ReactiveCommand;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -28,7 +29,7 @@ public class EmployeeControllerWeb {
     }
 
     @PostMapping("/create")
-    public Mono<Employee> createEmployee(@RequestBody Employee employee) {
+    public Mono<Employee> createEmployee(@Valid @RequestBody Employee employee) {
 //        return employeeService.createEmployee(employee);
         return rSocketRequester.route("create-employee")
                 .data(employee)
