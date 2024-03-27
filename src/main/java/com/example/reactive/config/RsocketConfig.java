@@ -19,31 +19,6 @@ import java.time.Duration;
 @Configuration
 public class RsocketConfig {
 
-//    @Bean
-//    public RSocketStrategies rSocketStrategies() {
-//        return RSocketStrategies.builder()
-//                .encoders(encoders -> {
-//                    encoders.add(new ByteBufferEncoder());
-//                    encoders.add(new ByteArrayEncoder());
-//                    encoders.add(new DataBufferEncoder());
-//                    encoders.add(new Jackson2CborEncoder());
-//                    encoders.add(new Jackson2JsonEncoder());
-//                })
-//                .decoders(decoders -> {
-//                    decoders.add(new ByteArrayDecoder());
-//                    decoders.add(new ByteBufferDecoder());
-//                    decoders.add(new DataBufferDecoder());
-//                    decoders.add(new Jackson2CborDecoder());
-//                    decoders.add(new Jackson2JsonDecoder());
-//                })
-//                .metadataExtractorRegistry(metadataExtractorRegistry -> {
-//                    metadataExtractorRegistry.metadataToExtract(MimeType.valueOf(Constants.MIME_FILE_EXTENSION), String.class, Constants.FILE_EXTN);
-//                    metadataExtractorRegistry.metadataToExtract(MimeType.valueOf(Constants.MIME_FILE_NAME), String.class, Constants.FILE_NAME);
-//                })
-//                .build();
-//    }
-
-
     @Bean
     public RSocketRequester rSocketRequester(
             RSocketStrategies rSocketStrategies,
@@ -51,9 +26,9 @@ public class RsocketConfig {
         return RSocketRequester.builder()
                 .rsocketStrategies(rSocketStrategies)
                 .rsocketConnector(
-                        rSocketConnector ->
-                                rSocketConnector.reconnect(Retry.fixedDelay(2, Duration.ofSeconds(2)))
-//                                        .keepAlive(Duration.ofSeconds(5), Duration.ofSeconds(30))
+                        rSocketConnector -> rSocketConnector
+                                .reconnect(Retry.fixedDelay(2, Duration.ofSeconds(2)))
+                                .keepAlive(Duration.ofSeconds(5), Duration.ofSeconds(30))
                 )
                 .dataMimeType(MimeTypeUtils.APPLICATION_JSON)
                 .tcp("localhost", port)
