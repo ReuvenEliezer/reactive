@@ -5,6 +5,9 @@ import com.example.reactive.services.EmployeeService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
+import org.springframework.data.relational.core.query.Criteria;
+import org.springframework.data.relational.core.query.Query;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.rsocket.RSocketRequester;
@@ -18,12 +21,10 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/employee")
 public class EmployeeControllerWeb {
     private static final Logger logger = LoggerFactory.getLogger(EmployeeControllerWeb.class);
-    private final EmployeeService employeeService;
     private final RSocketRequester rSocketRequester;
 
 
-    public EmployeeControllerWeb(EmployeeService employeeService, RSocketRequester rSocketRequester) {
-        this.employeeService = employeeService;
+    public EmployeeControllerWeb(RSocketRequester rSocketRequester) {
         this.rSocketRequester = rSocketRequester;
     }
 
@@ -58,6 +59,19 @@ public class EmployeeControllerWeb {
         return rSocketRequester.route("find-all")
                 .retrieveFlux(Employee.class)
                 .doOnNext(employee -> logger.info("find employee: {}", employee));
-
     }
+
+    @GetMapping("find-all-by-r2dbc-entity-template")
+    public Flux<Employee> findAllByEntityTemplate() {
+        return rSocketRequester.route("find-all-by-r2dbc-entity-template")
+                .retrieveFlux(Employee.class);
+    }
+
+    @GetMapping("find-by-last-name-by-r2dbc-entity-template/{last-name}")
+    public Flux<Employee> findByLastNameByEntityTemplate(@PathVariable("last-name") String lastName) {
+        return rSocketRequester
+                .route("find-by-last-name-by-r2dbc-entity-template/{last-name}", lastName)
+                .retrieveFlux(Employee.class);
+    }
+
 }

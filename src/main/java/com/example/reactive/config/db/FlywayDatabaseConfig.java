@@ -1,4 +1,4 @@
-package com.example.reactive.config;
+package com.example.reactive.config.db;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.autoconfigure.flyway.FlywayProperties;
