@@ -1,6 +1,6 @@
 package com.example.reactive;
 
-import com.example.reactive.config.FlywayDatabaseConfig;
+import com.example.reactive.config.db.FlywayDatabaseConfig;
 import com.example.reactive.dto.Employee;
 import com.example.reactive.repositories.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;

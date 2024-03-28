@@ -1,4 +1,4 @@
-package com.example.reactive.config;
+package com.example.reactive.config.db;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.autoconfigure.flyway.FlywayProperties;
@@ -18,8 +18,16 @@ public class FlywayDatabaseConfig {
                         flywayProperties.getUser(),
                         flywayProperties.getPassword()
                 )
+//                .initSql("CREATE SCHEMA IF NOT EXISTS " + flywayProperties.getDefaultSchema())
+//                .createSchemas(true)
+//                .schemas(flywayProperties.getDefaultSchema())
                 .locations(flywayProperties.getLocations().toArray(String[]::new))
                 .baselineOnMigrate(true)
                 .load();
     }
+
+//    @Bean
+//    public FlywayProperties flywayProperties(){
+//        return new FlywayProperties();
+//    }
 }

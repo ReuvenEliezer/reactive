@@ -47,10 +47,18 @@
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>io.asyncer</groupId>-->
-<!--            <artifactId>r2dbc-mysql</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.asyncer</groupId>
+            <artifactId>r2dbc-mysql</artifactId>
+        </dependency>
+
+<!--        https://stackoverflow.com/questions/72711770/flyway-unsupported-database-mysql-8-0-->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+        </dependency>
+
+
 <!--        <dependency>-->
 <!--            <groupId>io.r2dbc</groupId>-->
 <!--            <artifactId>r2dbc-pool</artifactId>-->
