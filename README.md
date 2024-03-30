@@ -29,12 +29,6 @@ These additional references should also help you:
 
 Make sure to include a [R2DBC Driver](https://r2dbc.io/drivers/) to connect to your database.
 
-# Documentation
-
-## Swagger
-- http://localhost:8080/webjars/swagger-ui/index.html 
-
-
 mysql :
 Install mysql-server for developer from here: [https://dev.mysql.com/downloads/file/?id=526407][1] and configure it according to your properties (username & password)
 
@@ -42,3 +36,8 @@ DB-type | r2dbc-url | liquibase/flyway-migrator url |
 --- | - | -- |
 h2 (in-memory) | r2dbc:h2:mem:///${spring.r2dbc.name}?options=DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false | jdbc:h2:mem:${spring.r2dbc.name};DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS ${spring.r2dbc.name} |
 Mysql | r2dbc:mysql://${spring.r2dbc.username}:${spring.r2dbc.password}@127.0.0.1:3306/${spring.r2dbc.name}?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&createDatabaseIfNotExist=true&serverTimezone=UTC | jdbc:mysql://${spring.r2dbc.username}:${spring.r2dbc.password}@127.0.0.1:3306/${spring.r2dbc.name}?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&createDatabaseIfNotExist=true&serverTimezone=UTC |
+
+# Documentation
+
+## Swagger
+- http://localhost:8080/webjars/swagger-ui/index.html 
