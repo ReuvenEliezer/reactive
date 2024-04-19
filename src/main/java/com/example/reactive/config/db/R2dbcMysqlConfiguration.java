@@ -1,9 +1,10 @@
 package com.example.reactive.config.db;
 
 
-//import io.r2dbc.h2.H2ConnectionFactory;
 import io.asyncer.r2dbc.mysql.MySqlConnectionConfiguration;
 import io.asyncer.r2dbc.mysql.MySqlConnectionFactory;
+import io.r2dbc.h2.H2ConnectionFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -11,6 +12,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
 
 import io.r2dbc.spi.ConnectionFactory;
+import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
+import org.springframework.data.r2dbc.dialect.MySqlDialect;
+import org.springframework.r2dbc.core.DatabaseClient;
 
 import java.time.Duration;
 import java.time.ZoneId;
@@ -21,6 +26,8 @@ import java.time.ZoneId;
 public class R2dbcMysqlConfiguration extends AbstractR2dbcConfiguration {
 
     /**
+     * https://docs.spring.io/spring-data/relational/reference/r2dbc/repositories.html#r2dbc.multiple-databases
+     * https://docs.spring.io/spring-data/relational/reference/r2dbc/getting-started.html
      * https://github.com/r2dbc/r2dbc-h2
      * https://dev.mysql.com/downloads/file/?id=526407
      */
@@ -48,6 +55,7 @@ public class R2dbcMysqlConfiguration extends AbstractR2dbcConfiguration {
                         .useServerPrepareStatement()
                         .build()
         );
+//            return H2ConnectionFactory.inMemory("testdb");
 //        ConnectionFactoryOptions connectionFactoryOptions = builder()
 //                .option(DRIVER, "h2")
 //                .option(PROTOCOL, "mem")
@@ -57,5 +65,10 @@ public class R2dbcMysqlConfiguration extends AbstractR2dbcConfiguration {
 //                .build();
 //        return ConnectionFactories.get(connectionFactoryOptions);
     }
+//    @Bean
+//    public R2dbcEntityOperations mysqlR2dbcEntityOperations(@Qualifier("mysql") ConnectionFactory connectionFactory) {
+//        DatabaseClient databaseClient = DatabaseClient.create(connectionFactory);
+//        return new R2dbcEntityTemplate(databaseClient, MySqlDialect.INSTANCE);
+//    }
 
 }
