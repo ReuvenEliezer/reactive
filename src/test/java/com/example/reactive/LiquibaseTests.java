@@ -36,7 +36,7 @@ class LiquibaseTests {
     void employeeRepositoryQueryTest() {
         Flux<Employee> actual = employeeRepository
                 .deleteAll()
-                .thenMany(employeeRepository.save(new Employee(null, "Eliezer", "Reuven")))
+                .thenMany(employeeRepository.save(new Employee("Eliezer", "Reuven")))
                 .thenMany(employeeRepository.findAll());
 
         StepVerifier.create(actual).expectNextMatches(result -> result.firstName().equals("Eliezer")).verifyComplete();

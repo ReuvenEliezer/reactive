@@ -51,7 +51,7 @@ class FlywayTest {
     void employeeRepositoryQueryTest() {
         Flux<Employee> actual = employeeRepository
                 .deleteAll()
-                .thenMany(employeeRepository.save(new Employee(null, "Eliezer", "Reuven")))
+                .thenMany(employeeRepository.save(new Employee("Eliezer", "Reuven")))
                 .thenMany(employeeRepository.findAll());
 
         StepVerifier.create(actual).expectNextMatches(result -> result.firstName().equals("Eliezer")).verifyComplete();
@@ -61,7 +61,7 @@ class FlywayTest {
     void employeeRepositoryPageableQueryTest() {
         List<Employee> employees = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            employees.add(new Employee(null, "Eliezer", "Reuven"));
+            employees.add(new Employee("Eliezer", "Reuven"));
         }
         employeeRepository.saveAll(employees).blockLast();
         assertThat(employeeRepository.findAll().count().block()).isEqualTo(10);
