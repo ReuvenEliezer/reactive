@@ -57,6 +57,7 @@ class IntegrationTest {
     @BeforeEach
     void setUp() {
         employeeRepository.deleteAll().block();
+        salariesRepository.deleteAll().block();
     }
 
     @Test

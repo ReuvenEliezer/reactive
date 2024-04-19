@@ -26,15 +26,15 @@ public record Employee(@Id
                        @Column("last_name")
                        String lastName,
 
-                       @NotNull
+//                       @NotNull
                        @Column("gender")
-                       Gender gender,
+                       String gender,
 
-                       @NotNull
+//                       @NotNull
                        @Column("birth_date")
                        LocalDate birthDate,
 
-                       @NotNull
+//                       @NotNull
                        @Column("hire_date")
                        LocalDate hireDate
 ) {
@@ -43,6 +43,6 @@ public record Employee(@Id
     }
 
     public Employee(String firstName, String lastName, Gender gender, LocalDate birthDate, LocalDate hireDate) {
-        this(null, firstName, lastName, gender, birthDate, hireDate);
+        this(null, firstName, lastName, gender.name(), birthDate, hireDate);
     }
 }
