@@ -37,7 +37,7 @@
 //        logger.info("Creating new employee with first name: {} and last name: {}", firstName, lastName);
 //        return webClient.post()
 //                .uri("http://localhost:" + appPort + "/employee/create")
-//                .bodyValue(new Employee(null, firstName, lastName))
+//                .bodyValue(new Employee(firstName, lastName))
 //                .retrieve()
 //                .bodyToMono(Employee.class)
 //                .doOnNext(employee -> logger.info("Created new employee: {}", employee))
@@ -49,7 +49,7 @@
 //                                       @ShellOption(value = "-l", help = "example: \"Reuven\"") String lastName) {
 //        logger.info("Creating new employee with first name: {} and last name: {}", firstName, lastName);
 //        return rSocketRequester.route("create-employee")
-//                .data(new Employee(null, firstName, lastName))
+//                .data(new Employee(firstName, lastName))
 //                .retrieveMono(Employee.class)
 //                .doOnNext(employee -> logger.info("Created new employee: {}", employee))
 //                .block();
@@ -60,7 +60,7 @@
 //                                             @ShellOption(value = "-l", help = "example: \"Reuven\"") String lastName) {
 //        logger.info("Creating new employee with first name: {} and last name: {}", firstName, lastName);
 //        Mono<Employee> employeeMono = rSocketRequester.route("create-employee")
-//                .data(new Employee(null, firstName, lastName))
+//                .data(new Employee(firstName, lastName))
 //                .retrieveMono(Employee.class)
 //                .doOnNext(employee -> logger.info("Created new employee: {}", employee));
 //        employeeMono.subscribe();
@@ -72,7 +72,7 @@
 //                                         @ShellOption(value = "-l", help = "example: \"Reuven\"") String lastName) {
 //        logger.info("Creating new employee with first name: {} and last name: {}", firstName, lastName);
 //        rSocketRequester.route("create-employee")
-//                .data(new Employee(null, firstName, lastName))
+//                .data(new Employee(firstName, lastName))
 //                .retrieveMono(Employee.class)
 //                .doOnNext(employee -> logger.info("Created new employee: {}", employee))
 //                .subscribe();
