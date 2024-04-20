@@ -38,6 +38,9 @@ class IntegrationTest {
     @Value("${server.port}")
     private int appPort;
 
+    @Value("${spring.r2dbc.url}")
+    private String dbType;
+
     @Autowired
     private EmployeeRepository employeeRepository;
 
@@ -157,8 +160,7 @@ class IntegrationTest {
         Flux<Salaries> sage = databaseClient.sql("SELECT * FROM salaries INNER JOIN employee ON employee.emp_no = salaries.emp_no")
                 .map((row, rowMetadata) ->
                         new Salaries(
-//                                row.get("emp_no", Long.class),
-                                Long.valueOf(row.get("emp_no", Integer.class)), // H2 not support Long, for the real mysql use Long.Class
+                                dbType.contains("h2") ? Long.valueOf(row.get("emp_no", Integer.class)) : row.get("emp_no", Long.class) , // H2 not support Long, for the real mysql use Long.Class
                                 row.get("salary", Integer.class),
                                 row.get("from_date", LocalDate.class),
                                 row.get("to_date", LocalDate.class))
