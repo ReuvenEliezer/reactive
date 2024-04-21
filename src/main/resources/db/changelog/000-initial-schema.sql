@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS department (
     dept_no     CHAR(4)         NOT NULL,
     dept_name   VARCHAR(40)     NOT NULL,
     PRIMARY KEY (dept_no),
-    UNIQUE KEY (dept_name)
+    UNIQUE (dept_name)
     );
 
 -- changeset liquibase:1111111-2::initial-schema
