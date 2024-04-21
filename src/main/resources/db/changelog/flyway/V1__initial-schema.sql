@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS department (
      dept_no     CHAR(4)         NOT NULL,
      dept_name   VARCHAR(40)     NOT NULL,
      PRIMARY KEY (dept_no),
-     UNIQUE KEY (dept_name)
+     UNIQUE (dept_name)
 );
 
 CREATE TABLE IF NOT EXISTS dept_manager (
