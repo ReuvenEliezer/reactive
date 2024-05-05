@@ -34,4 +34,11 @@ public class WebClientConfig {
                 .build();
     }
 
+//    @Bean
+//    public static ObjectMapper objectMapper() {
+//        return new Jackson2ObjectMapperBuilder()
+//                .build()
+//                ;
+//    }
+
 }
