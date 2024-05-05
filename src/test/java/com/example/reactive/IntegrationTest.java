@@ -176,12 +176,6 @@ class IntegrationTest {
                 .block();
         assertThat(salariesList1).hasSize(1);
         assertThat(salariesList1).containsExactly(salaries);
-
-        List<Salaries> salariesList1 = employeeRepository.findById(employee.empNo())
-                .flatMap(employee1 -> salariesRepository.findAllByEmpNo(employee1.empNo()).collectList())
-                .block();
-        assertThat(salariesList1).hasSize(1);
-        assertThat(salariesList1).containsExactly(salaries);
     }
 
     @Test
