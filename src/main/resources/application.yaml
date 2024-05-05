@@ -27,7 +27,7 @@ spring:
     user: ${spring.r2dbc.username}
     password: ${spring.r2dbc.password}
     default-schema: ${spring.r2dbc.name}
-    locations: classpath:db/changelog/flyway
+    locations: classpath:db/migration/
     enabled: true
   liquibase:
     url: jdbc:h2:mem:${spring.r2dbc.name};DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS ${spring.r2dbc.name}
@@ -42,6 +42,12 @@ spring:
   output:
     ansi:
       enabled: always
+springdoc:
+  version: '@springdoc.version@'
+  api-docs:
+    version: openapi_3_1
+  swagger-ui:
+    use-root-path: true
 logging:
   level:
     org.springframework.data.r2dbc: TRACE
