@@ -3,9 +3,11 @@ package com.example.reactive;
 import com.example.reactive.dto.Employee;
 import com.example.reactive.repositories.EmployeeRepository;
 import com.example.reactive.services.EmployeeService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.reactive.TransactionCallback;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.sql.SQLException;
@@ -36,9 +39,6 @@ class TransactionTest {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private EmployeeService employeeService;
-
-    @Autowired
     private TransactionalOperator transactionalOperator;
 
     @Autowired
@@ -48,6 +48,13 @@ class TransactionTest {
     @BeforeEach
     void setUp() {
         employeeRepository.deleteAll().block();
+        assertThat(employeeRepository.findAll().collectList().block()).isEmpty();
+    }
+
+    @AfterEach
+    void tearDown() {
+        employeeRepository.deleteAll().block();
+        assertThat(employeeRepository.findAll().collectList().block()).isEmpty();
     }
 
     @Test
@@ -58,39 +65,41 @@ class TransactionTest {
 
     @Test
     void transactionalFailureTest() {
-        transactionalOperator.execute(new TransactionCallback<Employee>() {
-                    @Override
-                    public Mono<Employee> doInTransaction(ReactiveTransaction status) {
-                        try {
-                            Mono<Employee> employee = employeeService.createEmployee(new Employee("E", "R"));
-                            return employee.then(employeeService.createEmployee(new Employee(null, null)));
-                        } catch (Exception ex) {
-                            status.setRollbackOnly();
-                            return Mono.empty();
-                        }
-                    }
-                }).doOnComplete(() -> logger.info("Complete to create employees"))
-                .collectList()
-                .block();
+        assertThat(employeeRepository.findAll().collectList().block()).isEmpty();
+        Flux<Employee> employeeFlux = transactionalOperator.execute(new TransactionCallback<Employee>() {
+            @Override
+            public Publisher<Employee> doInTransaction(ReactiveTransaction status) {
+                try {
+                    Mono<Employee> employee = employeeRepository.save(new Employee("E", "R"));
+                    Mono<Employee> nonValidEmployee = employee.then(employeeRepository.save(new Employee(null, null)));
+                    return Flux.concat(employee, nonValidEmployee);
+                } catch (Exception ex) {
+                    status.setRollbackOnly();
+                    return Flux.empty();
+                }
+            }
+        }).doOnComplete(() -> logger.info("Complete to create employees"));
+        assertThat(employeeFlux.collectList().block()).isEmpty();
         assertThat(employeeRepository.findAll().collectList().block()).isEmpty();
     }
 
     @Test
     void transactionalSuccessTest() {
-        transactionalOperator.execute(new TransactionCallback<Employee>() {
-                    @Override
-                    public Mono<Employee> doInTransaction(ReactiveTransaction status) {
-                        try {
-                            Mono<Employee> employee = employeeService.createEmployee(new Employee("E", "R"));
-                            return employee.then(employeeService.createEmployee(new Employee("EE", "R1")));
-                        } catch (Exception ex) {
-                            status.setRollbackOnly();
-                            return Mono.empty();
-                        }
-                    }
-                }).doOnComplete(() -> logger.info("Complete to create employees"))
-                .collectList()
-                .block();
+        assertThat(employeeRepository.findAll().collectList().block()).isEmpty();
+        Flux<Employee> employeeFlux = transactionalOperator.execute(new TransactionCallback<Employee>() {
+            @Override
+            public Publisher<Employee> doInTransaction(ReactiveTransaction status) {
+                try {
+                    Mono<Employee> employee1 = employeeRepository.save(new Employee("E", "R"));
+                    Mono<Employee> employee2 = employee1.then(employeeRepository.save(new Employee("EE", "R1")));
+                    return Flux.concat(employee1, employee2);
+                } catch (Exception ex) {
+                    status.setRollbackOnly();
+                    return Flux.empty();
+                }
+            }
+        }).doOnComplete(() -> logger.info("Complete to create employees"));
+        assertThat(employeeFlux.collectList().block()).hasSize(2);
         assertThat(employeeRepository.findAll().collectList().block()).hasSize(2);
     }
 
@@ -109,7 +118,7 @@ class TransactionTest {
                 .getReactiveTransaction(def);
         Mono<Void> voidMono = reactiveTransaction.flatMap(status -> {
 
-            Mono<Employee> tx = employeeService.createEmployee(new Employee("E", "R"));
+            Mono<Employee> tx = employeeRepository.save(new Employee("E", "R"));
 //            employeeService.createEmployee(new Employee(null, null));
 //            employeeService.createEmployee(new Employee("E", "R1"));
 
