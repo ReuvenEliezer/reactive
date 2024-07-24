@@ -95,21 +95,12 @@ class TransactionTest {
     }
 
 
-//    @Test
-//    void transactionalTest() {
-//        Salaries salaries1 = transactionalOperator.execute(status -> {
-//            Mono<Employee> employee = createEmployee(new Employee("E", "R"));
-//            return employee.flatMap(employee1 -> {
-//                Salaries salaries = new Salaries(employee1.empNo(), 1000, LocalDate.now().minusYears(2), LocalDate.now());
-//                return salariesRepository.save(salaries);
-//            });
-//        }).blockLast();
-//        assertThat(salaries1).isNull();
-//    }
-
     @Test
     @Disabled
     void transactionalTest2() throws SQLException {
+        /**
+         * https://docs.spring.io/spring-framework/reference/data-access/transaction/programmatic.html#transaction-programmatic-rtm
+         */
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
 // explicitly setting the transaction name is something that can be done only programmatically
         def.setName("SomeTxName");
@@ -119,7 +110,7 @@ class TransactionTest {
         Mono<Void> voidMono = reactiveTransaction.flatMap(status -> {
 
             Mono<Employee> tx = employeeService.createEmployee(new Employee("E", "R"));
-//            employeeService.createEmployee(new Employee("throwRunTimeException", "R1"));
+//            employeeService.createEmployee(new Employee(null, null));
 //            employeeService.createEmployee(new Employee("E", "R1"));
 
             return tx.then(reactiveTransactionManager.commit(status))
