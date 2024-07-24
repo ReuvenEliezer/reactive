@@ -50,4 +50,7 @@ springdoc:
     use-root-path: true
 logging:
   level:
-    org.springframework.data.r2dbc: TRACE
+    org.springframework.r2dbc: TRACE
+    io:
+      r2dbc:
+        h2: TRACE
