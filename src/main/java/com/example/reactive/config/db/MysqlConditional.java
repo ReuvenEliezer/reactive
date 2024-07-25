@@ -1,5 +1,8 @@
 package com.example.reactive.config.db;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
@@ -16,5 +19,9 @@ public class MysqlConditional implements Condition {
         return r2dbcProperties != null && r2dbcProperties.url().contains("mysql");
     }
 
+    @ConfigurationProperties("spring.r2dbc")
+    @EnableConfigurationProperties(MysqlConnProp.class)
+    record MysqlConnProp(@Value("url") String url) {
+    }
 
 }
