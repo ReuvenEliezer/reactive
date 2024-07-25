@@ -74,14 +74,5 @@ public class R2dbcMysqlConfiguration extends AbstractR2dbcConfiguration {
 //        return new R2dbcEntityTemplate(databaseClient, MySqlDialect.INSTANCE);
 //    }
 
-    @Bean
-    public ReactiveTransactionManager reactiveTransactionManager(ConnectionFactory connectionFactory) {
-        return new R2dbcTransactionManager(connectionFactory);
-    }
-
-    @Bean
-    public TransactionalOperator transactionalOperator(ReactiveTransactionManager ReactiveTransactionManager) {
-        return TransactionalOperator.create(ReactiveTransactionManager);
-    }
 
 }
