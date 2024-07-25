@@ -22,10 +22,11 @@ import reactor.core.publisher.Mono;
 public class EmployeeControllerWeb {
     private static final Logger logger = LoggerFactory.getLogger(EmployeeControllerWeb.class);
     private final RSocketRequester rSocketRequester;
+    private final EmployeeService employeeService;
 
-
-    public EmployeeControllerWeb(RSocketRequester rSocketRequester) {
+    public EmployeeControllerWeb(RSocketRequester rSocketRequester, EmployeeService employeeService) {
         this.rSocketRequester = rSocketRequester;
+        this.employeeService = employeeService;
     }
 
     @PostMapping("/create")
@@ -36,6 +37,11 @@ public class EmployeeControllerWeb {
                 .retrieveMono(Employee.class)
                 .doOnNext(entity -> logger.info("Creating new employee: {}", entity));
 
+    }
+
+    @PostMapping("/create-many")
+    public Flux<Employee> createEmployee(@RequestBody Flux<Employee> employees) {
+        return employeeService.createEmployees(employees);
     }
 
     @GetMapping("/find-by-id/{id}")
