@@ -57,45 +57,50 @@ class TransactionTest {
     }
 
     @Test
-    void transactionalFailureTest() {
+    void invalidEmployeeWithoutTransactionalTest() {
         Employee invalidEmployee = new Employee(null, null); // invalid employee
         List<Employee> employees = List.of(new Employee("E1", "R1"), invalidEmployee);
-        Flux<Employee> employeeFlux = transactionalOperator.execute(new TransactionCallback<Employee>() {
-            @Override
-            public Publisher<Employee> doInTransaction(ReactiveTransaction status) {
-                try {
-                    return employeeRepository.saveAll(employees)
-                            .doOnError(e -> status.setRollbackOnly())
-                            .onErrorResume(e -> Flux.empty());
-//                    Mono<Employee> employee1 = employeeRepository.save(new Employee("E1", "R1"));
-//                    return employee1.then(employeeRepository.save(invalidEmployee));
-//                    Mono<Employee> nonValidEmployee = employee.then(employeeRepository.save(new Employee(null, null)));
-//                    return Flux.concat(employee, nonValidEmployee);
-                } catch (Exception ex) {
-                    status.setRollbackOnly();
-                    return Flux.empty();
-                }
-            }
-        }).doOnComplete(() -> logger.info("Complete to create employees"));
+        Flux<Employee> employeeFlux = employeeRepository
+                .saveAll(employees)
+                .onErrorResume(e -> Mono.empty());
+        assertThat(employeeFlux.collectList().block()).hasSize(1);
+        assertThat(employeeRepository.findAll().collectList().block()).hasSize(1);
+    }
+
+    @Test
+    void invalidEmployeeWithTransactionalTest() {
+        Employee invalidEmployee = new Employee(null, null); // invalid employee
+        List<Employee> employees = List.of(new Employee("E1", "R1"), invalidEmployee);
+        Flux<Employee> employeeFlux = doInTransaction(employees);
         List<Employee> employee = employeeFlux.collectList().block();
 //        assertThat(employeeFlux.collectList().block()).isEmpty();
         assertThat(employeeRepository.findAll().collectList().block()).isEmpty();
     }
 
+    private Flux<Employee> doInTransaction(List<Employee> employees) {
+        return transactionalOperator.execute(new TransactionCallback<Employee>() {
+            @Override
+            public Publisher<Employee> doInTransaction(ReactiveTransaction status) {
+                return employeeRepository.saveAll(employees)
+                        .doOnError(e -> status.setRollbackOnly())
+                        .onErrorResume(e -> Mono.empty());
+//                try {
+//                    Mono<Employee> employee1 = employeeRepository.save(new Employee("E1", "R1"));
+//                    return employee1.then(employeeRepository.save(invalidEmployee));
+//                    Mono<Employee> nonValidEmployee = employee.then(employeeRepository.save(new Employee(null, null)));
+//                    return Flux.concat(employee, nonValidEmployee);
+//                } catch (Exception ex) {
+//                    status.setRollbackOnly();
+//                    return Flux.empty();
+//                }
+            }
+        }).doOnComplete(() -> logger.info("Complete to create employees"));
+    }
+
     @Test
     void transactionalSuccessTest() {
         List<Employee> employees = List.of(new Employee("E1", "R1"), new Employee("E2", "R2"));
-        Flux<Employee> employeeFlux = transactionalOperator.execute(new TransactionCallback<Employee>() {
-            @Override
-            public Publisher<Employee> doInTransaction(ReactiveTransaction status) {
-                try {
-                    return employeeRepository.saveAll(employees);
-                } catch (Exception ex) {
-                    status.setRollbackOnly();
-                    return Flux.empty();
-                }
-            }
-        }).doOnComplete(() -> logger.info("Complete to create employees"));
+        Flux<Employee> employeeFlux = doInTransaction(employees);
         assertThat(employeeFlux.collectList().block()).hasSize(2);
         assertThat(employeeRepository.findAll().collectList().block()).hasSize(2);
     }
