@@ -179,6 +179,16 @@ class IntegrationTest {
     }
 
     @Test
+    void delayElementsTest() {
+        Flux.range(1, 100)
+                .index()
+                .delayElements(Duration.ofMillis(100))
+                .buffer(10)
+                .doOnNext(value -> logger.info("value: {}", value))
+                .blockLast();
+    }
+
+    @Test
     void removeEmployeeWithSalaryTest() {
         Employee employee = createEmployee(
                 new Employee(
