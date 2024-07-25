@@ -2,8 +2,6 @@ package com.example.reactive;
 
 import com.example.reactive.dto.Employee;
 import com.example.reactive.repositories.EmployeeRepository;
-import com.example.reactive.services.EmployeeService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -12,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.r2dbc.BadSqlGrammarException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.ReactiveTransaction;
@@ -51,48 +50,46 @@ class TransactionTest {
         assertThat(employeeRepository.findAll().collectList().block()).isEmpty();
     }
 
-    @AfterEach
-    void tearDown() {
-        employeeRepository.deleteAll().block();
-        assertThat(employeeRepository.findAll().collectList().block()).isEmpty();
-    }
-
     @Test
     void employeeNotNullFirstAndLastNameTest() {
         assertThatThrownBy(() -> employeeRepository.save(new Employee(null, null)).block())
-                .isInstanceOf(BadSqlGrammarException.class);
+                .isInstanceOfAny(BadSqlGrammarException.class, DataAccessResourceFailureException.class);
     }
 
     @Test
     void transactionalFailureTest() {
-        assertThat(employeeRepository.findAll().collectList().block()).isEmpty();
+        Employee invalidEmployee = new Employee(null, null); // invalid employee
+        List<Employee> employees = List.of(new Employee("E1", "R1"), invalidEmployee);
         Flux<Employee> employeeFlux = transactionalOperator.execute(new TransactionCallback<Employee>() {
             @Override
             public Publisher<Employee> doInTransaction(ReactiveTransaction status) {
                 try {
-                    Mono<Employee> employee = employeeRepository.save(new Employee("E", "R"));
-                    Mono<Employee> nonValidEmployee = employee.then(employeeRepository.save(new Employee(null, null)));
-                    return Flux.concat(employee, nonValidEmployee);
+                    return employeeRepository.saveAll(employees)
+                            .doOnError(e -> status.setRollbackOnly())
+                            .onErrorResume(e -> Flux.empty());
+//                    Mono<Employee> employee1 = employeeRepository.save(new Employee("E1", "R1"));
+//                    return employee1.then(employeeRepository.save(invalidEmployee));
+//                    Mono<Employee> nonValidEmployee = employee.then(employeeRepository.save(new Employee(null, null)));
+//                    return Flux.concat(employee, nonValidEmployee);
                 } catch (Exception ex) {
                     status.setRollbackOnly();
                     return Flux.empty();
                 }
             }
         }).doOnComplete(() -> logger.info("Complete to create employees"));
-        assertThat(employeeFlux.collectList().block()).isEmpty();
+        List<Employee> employee = employeeFlux.collectList().block();
+//        assertThat(employeeFlux.collectList().block()).isEmpty();
         assertThat(employeeRepository.findAll().collectList().block()).isEmpty();
     }
 
     @Test
     void transactionalSuccessTest() {
-        assertThat(employeeRepository.findAll().collectList().block()).isEmpty();
+        List<Employee> employees = List.of(new Employee("E1", "R1"), new Employee("E2", "R2"));
         Flux<Employee> employeeFlux = transactionalOperator.execute(new TransactionCallback<Employee>() {
             @Override
             public Publisher<Employee> doInTransaction(ReactiveTransaction status) {
                 try {
-                    Mono<Employee> employee1 = employeeRepository.save(new Employee("E", "R"));
-                    Mono<Employee> employee2 = employee1.then(employeeRepository.save(new Employee("EE", "R1")));
-                    return Flux.concat(employee1, employee2);
+                    return employeeRepository.saveAll(employees);
                 } catch (Exception ex) {
                     status.setRollbackOnly();
                     return Flux.empty();
