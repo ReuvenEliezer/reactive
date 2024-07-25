@@ -15,10 +15,7 @@ import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.r2dbc.dialect.MySqlDialect;
-import org.springframework.r2dbc.connection.R2dbcTransactionManager;
 import org.springframework.r2dbc.core.DatabaseClient;
-import org.springframework.transaction.ReactiveTransactionManager;
-import org.springframework.transaction.reactive.TransactionalOperator;
 
 import java.time.Duration;
 import java.time.ZoneId;
@@ -73,6 +70,5 @@ public class R2dbcMysqlConfiguration extends AbstractR2dbcConfiguration {
 //        DatabaseClient databaseClient = DatabaseClient.create(connectionFactory);
 //        return new R2dbcEntityTemplate(databaseClient, MySqlDialect.INSTANCE);
 //    }
-
 
 }
