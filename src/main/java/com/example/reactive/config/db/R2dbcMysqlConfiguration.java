@@ -19,6 +19,7 @@ import org.springframework.r2dbc.core.DatabaseClient;
 
 import java.time.Duration;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 @Configuration
 //@ConditionalOnProperty(prefix = "spring.r2dbc.username", value = "root")
@@ -49,7 +50,7 @@ public class R2dbcMysqlConfiguration extends AbstractR2dbcConfiguration {
                         .username(r2dbcProperties.getUsername())
                         .password(r2dbcProperties.getPassword())
                         .database(r2dbcProperties.getName())
-                        .serverZoneId(ZoneId.of("UTC")) //https://stackoverflow.com/questions/76020871/springboot-3-webflux-r2dbc-mysql-timezone-issue/78234333#78234333
+                        .connectionTimeZone(ZoneOffset.UTC.getId()) //https://stackoverflow.com/questions/76020871/springboot-3-webflux-r2dbc-mysql-timezone-issue/78234333#78234333
                         .connectTimeout(Duration.ofSeconds(3))
                         .createDatabaseIfNotExist(true)
                         .useServerPrepareStatement()
