@@ -16,22 +16,22 @@ spring:
 #      short-names: h
 #      command: help
   r2dbc:
-    url: r2dbc:h2:mem:///${spring.r2dbc.name}?options=DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
-#    url: r2dbc:mysql://${spring.r2dbc.username}:${spring.r2dbc.password}@127.0.0.1:3306/${spring.r2dbc.name}?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&createDatabaseIfNotExist=true&serverTimezone=UTC
+#    url: r2dbc:h2:mem:///${spring.r2dbc.name}?options=DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    url: r2dbc:mysql://${spring.r2dbc.username}:${spring.r2dbc.password}@127.0.0.1:3306/${spring.r2dbc.name}?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
     password: administrator
     name: testdb
   flyway:
-    url: jdbc:h2:mem:${spring.r2dbc.name};DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS ${spring.r2dbc.name}
-#    url: jdbc:mysql://${spring.r2dbc.username}:${spring.r2dbc.password}@127.0.0.1:3306/${spring.r2dbc.name}?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&createDatabaseIfNotExist=true&serverTimezone=UTC
+#    url: jdbc:h2:mem:${spring.r2dbc.name};DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS ${spring.r2dbc.name}
+    url: jdbc:mysql://${spring.r2dbc.username}:${spring.r2dbc.password}@127.0.0.1:3306/${spring.r2dbc.name}?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&createDatabaseIfNotExist=true&serverTimezone=UTC
     user: ${spring.r2dbc.username}
     password: ${spring.r2dbc.password}
     default-schema: ${spring.r2dbc.name}
     locations: classpath:db/migration/
     enabled: true
   liquibase:
-    url: jdbc:h2:mem:${spring.r2dbc.name};DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS ${spring.r2dbc.name}
-#    url: jdbc:mysql://${spring.r2dbc.username}:${spring.r2dbc.password}@127.0.0.1:3306/${spring.r2dbc.name}?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&createDatabaseIfNotExist=true&serverTimezone=UTC
+#    url: jdbc:h2:mem:${spring.r2dbc.name};DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS ${spring.r2dbc.name}
+    url: jdbc:mysql://${spring.r2dbc.username}:${spring.r2dbc.password}@127.0.0.1:3306/${spring.r2dbc.name}?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&createDatabaseIfNotExist=true&serverTimezone=UTC
     user: ${spring.r2dbc.password}
     password: ${spring.r2dbc.username}
     default-schema: ${spring.r2dbc.name}
@@ -46,8 +46,33 @@ springdoc:
   version: '@springdoc.version@'
   api-docs:
     version: openapi_3_1
+    enabled: true
   swagger-ui:
-    use-root-path: true
+    enabled: true
+    url: /v3/api-docs
+#    use-root-path: true
+#  show-actuator: true
+management:
+  tracing:
+    sampling:
+      probability: 1.0 # only for testing purpose, switch back to 0.1 for production code
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+    loggers:
+      enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
 logging:
   level:
     org.springframework.r2dbc: TRACE
