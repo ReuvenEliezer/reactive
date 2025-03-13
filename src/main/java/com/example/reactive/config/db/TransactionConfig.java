@@ -1,6 +1,7 @@
 package com.example.reactive.config.db;
 
 import io.r2dbc.spi.ConnectionFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.r2dbc.connection.R2dbcTransactionManager;
@@ -11,7 +12,7 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 public class TransactionConfig {
 
     @Bean
-    public ReactiveTransactionManager reactiveTransactionManager(ConnectionFactory connectionFactory) {
+    public ReactiveTransactionManager reactiveTransactionManager(@Qualifier("connectionFactory") ConnectionFactory connectionFactory) {
         return new R2dbcTransactionManager(connectionFactory);
     }
 
