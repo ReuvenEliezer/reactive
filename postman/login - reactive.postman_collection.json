@@ -16,11 +16,6 @@
 						"value": "*/*"
 					},
 					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJpYXQiOjE3MzczOTcxMzIsImV4cCI6MTczNzM5NzczMn0.odTwbiF_zlzVVR2PDTRxh1eFbcJNvH9nPVNH8-XCxJY",
-						"disabled": true
-					},
-					{
 						"key": "Content-Type",
 						"value": "application/json"
 					}
@@ -126,11 +121,6 @@
 				"method": "GET",
 				"header": [
 					{
-						"key": "Authorization",
-						"value": "{{token}}",
-						"type": "text"
-					},
-					{
 						"key": "Content-Type",
 						"value": "application/json",
 						"type": "text"
@@ -149,6 +139,56 @@
 					"port": "8080",
 					"path": [
 						"employee",
+						"find-all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user/findAll",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"user-agent": true,
+					"host": true,
+					"accept": true,
+					"connection": true,
+					"accept-encoding": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/find-all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
 						"find-all"
 					]
 				}
