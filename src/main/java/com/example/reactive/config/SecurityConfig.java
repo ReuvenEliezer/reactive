@@ -2,6 +2,7 @@ package com.example.reactive.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -32,8 +33,7 @@ public class SecurityConfig {
 
     @Bean
 //    @Order(Ordered.HIGHEST_PRECEDENCE)
-
-//// @Profile("!test") // Uncomment if you want to exclude it from the "test" profile
+    @Profile("!test") // Uncomment if you want to exclude it from the "test" profile
     public SecurityWebFilterChain securityWebFilterChain(
             ServerHttpSecurity http
 //            , ServerSecurityContextRepository serverSecurityContextRepository

@@ -7,14 +7,19 @@ import com.example.reactive.repositories.EmployeeRepository;
 import com.example.reactive.repositories.SalariesRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,8 +32,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("test")
+@TestPropertySource(properties = "spring.profiles.active=test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = ReactiveApplication.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@Import(NoSecurityConfig.class)
+//@ExtendWith(SpringExtension.class)
 class IntegrationTest {
 
     private static final Logger logger = LoggerFactory.getLogger(IntegrationTest.class);

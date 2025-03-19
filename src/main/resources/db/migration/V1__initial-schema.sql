@@ -1,6 +1,6 @@
-CREATE USER 'root'@'127.0.0.1' IDENTIFIED WITH mysql_native_password BY 'administrator';
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
+-- CREATE USER 'root'@'127.0.0.1' IDENTIFIED WITH mysql_native_password BY 'administrator';
+-- GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' WITH GRANT OPTION;
+-- FLUSH PRIVILEGES;
 
 CREATE TABLE IF NOT EXISTS employee (
     emp_no SERIAL PRIMARY KEY,
