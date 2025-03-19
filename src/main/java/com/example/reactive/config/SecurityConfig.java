@@ -29,11 +29,12 @@ import reactor.core.publisher.Mono;
 @Configuration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
+@Profile("!test")
 public class SecurityConfig {
 
     @Bean
 //    @Order(Ordered.HIGHEST_PRECEDENCE)
-    @Profile("!test") // Uncomment if you want to exclude it from the "test" profile
+//    @Profile("!test") // Uncomment if you want to exclude it from the "test" profile
     public SecurityWebFilterChain securityWebFilterChain(
             ServerHttpSecurity http
 //            , ServerSecurityContextRepository serverSecurityContextRepository

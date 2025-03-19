@@ -11,6 +11,7 @@ import com.example.reactive.services.security.JWTUtil;
 import com.example.reactive.services.security.RefreshTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Profile("!test")
 public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 

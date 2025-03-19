@@ -17,29 +17,30 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 @Component
+@Profile("!test")
 public class JwtAuthWebFilter implements WebFilter {
 
     private static final Logger logger = LogManager.getLogger(JwtAuthWebFilter.class);
 
     private final ReactiveAuthenticationManager authenticationManager;
 
-    @Value("${spring.profiles.active:default}")
-    private String activeProfile;
+//    @Value("${spring.profiles.active:default}")
+//    private String activeProfile;
 
     public JwtAuthWebFilter(ReactiveAuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
-    private boolean isTestProfile() {
-        return activeProfile != null && activeProfile.equals("test");
-    }
+//    private boolean isTestProfile() {
+//        return activeProfile != null && activeProfile.equals("test");
+//    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        if (isTestProfile()) { //TODO fix this patch
-            logger.info("Filter skipped because 'test' profile is active");
-            return chain.filter(exchange);
-        }
+//        if (isTestProfile()) { //TODO fix this patch
+//            logger.info("Filter skipped because 'test' profile is active");
+//            return chain.filter(exchange);
+//        }
 
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();

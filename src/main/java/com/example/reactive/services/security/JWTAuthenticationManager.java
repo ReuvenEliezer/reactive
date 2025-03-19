@@ -3,6 +3,7 @@ package com.example.reactive.services.security;
 import com.example.reactive.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 
 @Component
+@Profile("!test")
 public class JWTAuthenticationManager implements ReactiveAuthenticationManager {
 
     private static final Logger logger = LogManager.getLogger(JWTAuthenticationManager.class);

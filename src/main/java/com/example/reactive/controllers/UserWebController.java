@@ -5,6 +5,7 @@ import com.example.reactive.services.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -12,6 +13,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/user")
+@Profile("!test")
 public class UserWebController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserWebController.class);
