@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<User> createUser(User user) {
         return userRepository
-                .save(new User(null, user.username(), user.email(), passwordEncoder.encode(user.password())))
+                .save(new User(null, user.email(), user.username(), passwordEncoder.encode(user.password())))
                 .doOnNext(user1 -> logger.info("Created new user: {}", user1.username()));
     }
 

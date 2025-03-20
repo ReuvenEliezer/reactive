@@ -27,4 +27,8 @@ public record User(
         String password
 ) {
 
+    public User(String email, String username, String password) {
+        this(null, email, username, password);
+    }
+
 }
