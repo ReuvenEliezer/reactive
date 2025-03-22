@@ -14,11 +14,9 @@ import java.util.function.Function;
 
 public class JWTUtil {
 
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final Duration EXPIRATION_TIME = Duration.ofMinutes(10);
 
-    public static String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
+    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public static Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
@@ -37,26 +35,25 @@ public class JWTUtil {
                 .getBody();
     }
 
-    private static Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
     public static String generateToken(String username) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
-    }
-
-    private static String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
-                .claims(claims)
-                .subject(subject)
+                .claims(new HashMap<>())
+                .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + Duration.ofMinutes(10).toMillis())) // 10 min expiration
+                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME.toMillis()))
                 .signWith(key).compact();
     }
 
     public static Boolean validateToken(String token, String username) {
         final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
+        return extractedUsername.equals(username) && !isTokenExpired(token);
+    }
+
+    public static String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    private static Boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
     }
 }
