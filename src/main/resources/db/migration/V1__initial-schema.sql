@@ -1,3 +1,7 @@
+-- CREATE USER 'root'@'127.0.0.1' IDENTIFIED WITH mysql_native_password BY 'administrator';
+-- GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' WITH GRANT OPTION;
+-- FLUSH PRIVILEGES;
+
 CREATE TABLE IF NOT EXISTS employee (
     emp_no SERIAL PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
@@ -50,4 +54,11 @@ CREATE TABLE IF NOT EXISTS salaries (
                           to_date     DATE            NOT NULL,
                           FOREIGN KEY (emp_no) REFERENCES employee (emp_no) ON DELETE CASCADE,
                           PRIMARY KEY (emp_no, from_date)
+);
+
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
 );

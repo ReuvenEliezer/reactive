@@ -4,6 +4,8 @@ info:
   app:
     version: '@project.version@'
 spring:
+  profiles:
+    default: default
   application:
     name: '@project.artifactId@'
   rsocket:
@@ -46,8 +48,33 @@ springdoc:
   version: '@springdoc.version@'
   api-docs:
     version: openapi_3_1
+    enabled: true
   swagger-ui:
-    use-root-path: true
+    enabled: true
+    url: /v3/api-docs
+#    use-root-path: true
+#  show-actuator: true
+management:
+  tracing:
+    sampling:
+      probability: 1.0 # only for testing purpose, switch back to 0.1 for production code
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      access: unrestricted
+    prometheus:
+      access: unrestricted
+    loggers:
+      access: unrestricted
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
 logging:
   level:
     org.springframework.r2dbc: TRACE
